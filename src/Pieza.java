@@ -1,55 +1,62 @@
-public class Pieza implements ITipusPesa {
-    private final char tipus; //(R, D, T, C, A, P -> Rey, Dama, Torre, Caballo, Alfil, Peón)
-    private char col;
+public class Pieza implements Itipopieza{
     private int fil;
-
-    public Pieza(char tipus, char col, int fil){
-        checkPieza(tipus);
-        this.tipus = tipus;
-        this.col = col;
+    private char col;
+    private final char tipus;
+    public static final char REI = 'R', REINA = 'Q', TORRE = 'T', CABALLO = 'C', ALFIL = 'A', PEON = 'P';
+    public Pieza(int fil, char col, char tipus) {
+        checkTipo(tipus);
         this.fil = fil;
+        this.col = col;
+        this.tipus = tipus;
     }
-private void checkPieza(char tipus){
-        if(tipus!='R'&&tipus!='D'&&tipus!='T'&&tipus!='C'&&tipus!='A'&&tipus!='P'){
-            throw new IllegalArgumentException("Tipo de pieza no valido");
+
+    private void checkTipo(char tipus) {
+        if (tipus != REI && tipus != REINA && tipus != TORRE && tipus != CABALLO && tipus != ALFIL && tipus != PEON) {
+            throw new IllegalArgumentException("Peça no vàlida, tipus incorrecte.");
         }
-}
+    }
 
-    @Override
-    public String getTipus() {
-        switch (this.tipus){
-            case 'R': return "Rei.";
-            case 'D': return "Dama.";
-            case 'T': return "Torre.";
-            case 'C': return "Cavall.";
-            case 'A': return "Alfil";
-            case 'P': return "Peó.";
-
+    public char getTipus(){
+        return tipus;
+    }
+    public int getFila(){
+        return fil;
+    }
+    public int getColumna(){
+        switch (this.col){
+            case 'a': return 1;
+            case 'b': return 2;
+            case 'c': return 3;
+            case 'd': return 4;
+            case 'e': return 5;
+            case 'f': return 6;
+            case 'g': return 7;
+            case 'h': return 8;
+            default: return 0;
         }
-        return null;
     }
-
-    @Override
-    public char getColumna() {
-        return this.col;
+    public void setPosicion(int fil, int col) throws RuntimeException{
+        if (fil < 1 || fil > 8 || col < 1 || col > 8) {
+            throw new RuntimeException("Posició fora dels límits.");
+        }
     }
-
-    @Override
-    public int getFila() {
-        return this.fil;
-    }
-
-    @Override
-    public boolean fiJoc() {//acabarla
-        return false;
+    // si la posició no és correcte cal llançar una excepció
+    public boolean fiJoc(){
+        return tipus == REI;
     }
 
     @Override
     public void setPosicio(int fil, char col) {
-        if (fil < 1 || fil > 8 || col < 'a' || col > 'h') {
-            throw new RuntimeException("Posició fora del taulell");
-        }
-        this.fil = fil;
-        this.col = col;
+
+    }
+
+    public String toString() {
+        return (this.tipus + " " + this.fil + this.col);
+    }
+
+    public boolean equals(Object o){
+        if (o == this) return true;
+        if (!(o instanceof Pieza) || o == null) return false;
+        return this.fil == ((Pieza) o).getFila() && this.col == ((Pieza) o).getColumna() && this.tipus == ((Pieza) o).getTipus();
     }
 }
