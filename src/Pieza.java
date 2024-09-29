@@ -1,9 +1,9 @@
-public class Pesa implements TipusPesa{
+public class Pieza implements ITipusPesa {
     private final char tipus; //(R, D, T, C, A, P -> Rey, Dama, Torre, Caballo, Alfil, Peón)
     private char col;
     private int fil;
 
-    public Pesa(char tipus, char col, int fil){
+    public Pieza(char tipus, char col, int fil){
         checkPieza(tipus);
         this.tipus = tipus;
         this.col = col;

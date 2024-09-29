@@ -1,4 +1,4 @@
-public interface TipusPesa {
+public interface ITipusPesa {
 
     //Classe abstracta per a la classe peça!!
 
