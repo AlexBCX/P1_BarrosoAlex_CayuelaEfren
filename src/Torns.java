@@ -41,11 +41,11 @@ public class Torns<E> {
             throw new IOException("Error en llegir el fitxer: " + e.getMessage());
         }
     }
-    public void agafarPrimerTorn() {
+    public E agafarPrimerTorn() {
         if (llistatTorns.isEmpty()) {
             throw new NoSuchElementException("No hi ha més torns.");
         }
-        llistatTorns.remove(0);
+        return llistatTorns.remove(0); // Devuelve y elimina el primer turno.
     }
 
     public int getNumTornsRestants() {
