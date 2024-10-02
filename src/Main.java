@@ -50,4 +50,19 @@ public class Main {
         Jugador<Pieza>JugadorBlanc=new Jugador<>(Blanques);
         Jugador<Pieza>JugadorNegre=new Jugador<>(Negres);
     }
+    public static void inicialitzarTaulell(){
+        int[][] taulell= new int [8][8];
+        for(int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                if(i==0||i==7){
+                    taulell[i][j]=Pieza.PEON;
+                }
+                if(i>=2&&i<=5){
+                    taulell[i][j]=0;
+                }
+
+            }
+        }
+
+    }
 }
