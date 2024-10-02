@@ -11,5 +11,4 @@ public interface Itipopieza {
 
     public abstract boolean fiJoc() ;
 
-    void setPosicio(int fil, char col);
 }
