@@ -45,11 +45,6 @@ public class Pieza implements Itipopieza{
         return tipus == REI;
     }
 
-    @Override
-    public void setPosicio(int fil, char col) {
-
-    }
-
     public String toString() {
         return (this.tipus + " " + this.fil + this.col);
     }
