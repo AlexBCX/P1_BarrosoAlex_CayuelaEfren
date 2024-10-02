@@ -35,7 +35,7 @@ public class Torns<E> {
         try (BufferedReader reader = new BufferedReader(new FileReader(nomFitxer))) {
             String linea;
             while ((linea = reader.readLine()) != null) {
-                llistatTorns.add((E) linea);
+                llistatTorns.add((E)linea);
             }
         } catch (IOException e) {
             throw new IOException("Error en llegir el fitxer: " + e.getMessage());

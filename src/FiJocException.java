@@ -3,3 +3,4 @@ public class FiJocException extends Exception {
         super(msg);
     }
 }
+

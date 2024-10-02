@@ -27,7 +27,7 @@ public class Main {
         switch(opcio){
         case 1:
             System.out.println("Ingresa el nom del fitxer sense .txt.");
-                nomFitxer=sc.next();
+                //nomFitxer=sc.next();
                 jugarPartidaNova(torns);
             break;
         case 2:
@@ -44,20 +44,87 @@ public class Main {
         sc.close();
     }
     public static void jugarPartidaNova(Torns<String> torns){
+        Scanner sc = new Scanner(System.in);
         boolean partida = true;
        //inicialitzem les peces i jugadors
         ArrayList<Pieza>Blanques=new ArrayList<>();
         ArrayList<Pieza>Negres=new ArrayList<>();
+        Blanques = inicialitzarBlanques(Blanques);
+        Negres = inicialitzarNegres(Negres);
 
         Jugador<Pieza>JugadorBlanc=new Jugador<>(Blanques);
         Jugador<Pieza>JugadorNegre=new Jugador<>(Negres);
-        while(partida){
-        //TODO:
-            try{
+        System.out.println("Peces posicionades correctament! (Blanques abaix)");
 
-            }catch(FiJocException e){
-                System.out.println("Has matat al rei!!!");
-                partida=false;
+        while (partida) {
+            try {
+
+                JugadorBlanc.moverPieza( 1, 1, 8, 1);//prueba movimiento borrar luego
+                mostrarTaulell(JugadorBlanc, JugadorNegre);//mostrar taulell
+                System.out.println("Torn de les blanques");
+
+                // Llegir moviment blanques
+                System.out.println("Introdueix el moviment (ex: 'a2 d7'):");
+                String movimentBlanc = sc.nextLine();
+                String[] moviments = movimentBlanc.split(" ");
+
+                if (moviments.length != 2) {
+                    throw new RuntimeException("Format de moviment incorrecte. Usa 'a2 d7'.");
+                }
+
+                // Extraer pos inicial y final
+                String posInicial = moviments[0];
+                String posFinal = moviments[1];
+
+                // Convertir pos inicial (ex----> "a2")
+                int colInicial = posInicial.charAt(0) - 'a' + 1; // Convertir 'a'-'h' a 1-8
+                int filInicial = Character.getNumericValue(posInicial.charAt(1));
+
+                // Convertir pos final (ex. "d7")
+                int colFinal = posFinal.charAt(0) - 'a' + 1;
+                int filFinal = Character.getNumericValue(posFinal.charAt(1));
+
+                // Mover la pieza
+                JugadorBlanc.moverPieza(filInicial, colInicial, filFinal, colFinal);
+                JugadorNegre.eliminarPiezaPosicion(filFinal, colFinal);
+
+                // Mostrar taulelll
+                mostrarTaulell(JugadorBlanc, JugadorNegre);
+                System.out.println("Torn de les negres");
+
+
+                // llegir moviment ( lo mismo que las blancas)
+                System.out.println("Introdueix el moviment (ex: 'a7 a5'):");
+                String movimentNegre = sc.nextLine();
+                String[] movimentsNegres = movimentNegre.split(" ");
+
+                if (movimentsNegres.length != 2) {
+                    throw new RuntimeException("Format de moviment incorrecte. Usa 'a7 a5'.");
+                }
+
+                // Extraer pos inicial y final negras
+                String posInicialNegres = movimentsNegres[0];
+                String posFinalNegres = movimentsNegres[1];
+
+                // Convertir pos inicial y final
+                int colInicialNegre = posInicialNegres.charAt(0) - 'a' + 1;
+                int filInicialNegre = Character.getNumericValue(posInicialNegres.charAt(1));
+
+                int colFinalNegre = posFinalNegres.charAt(0) - 'a' + 1;
+                int filFinalNegre = Character.getNumericValue(posFinalNegres.charAt(1));
+
+                // moure
+                JugadorNegre.moverPieza(filInicialNegre, colInicialNegre, filFinalNegre, colFinalNegre);
+                // todavia no -->System.out.println("peça eliminada!");
+
+
+
+
+            } catch (FiJocException e) {
+                System.out.println("Has matat al rei!!! " + e.getMessage());
+                partida = false;
+            } catch (RuntimeException e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
@@ -111,5 +178,40 @@ public class Main {
         piezasNegras.add(new Pieza(7, 'h', Pieza.PEON));
 
         return piezasNegras;
+    }
+
+    public static void mostrarTaulell(Jugador<Pieza> JugadorBlanc, Jugador<Pieza> JugadorNegre) {
+        // Matriu per mostrar Taulell
+        char[][] taulell = new char[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                taulell[i][j] = '.';
+            }
+        }
+
+        // Aafegim les blanquess
+        for (Pieza p : JugadorBlanc.getPiezasVivas()) {
+            int fila = p.getFila() - 1;
+            int columna = p.getColumna() - 1;
+            taulell[fila][columna] = Character.toUpperCase(p.getTipus());//en mayus per distingir de les neges
+        }
+
+        // Afegim negres
+        for (Pieza p : JugadorNegre.getPiezasVivas()) {
+            int fila = p.getFila() - 1;
+            int columna = p.getColumna() - 1;
+            taulell[fila][columna] = Character.toLowerCase(p.getTipus());//en minus per distingir de les altres
+        }
+
+        // fem el print del taulell
+        System.out.println("  a b c d e f g h");
+        for (int i = 7; i >= 0; i--) {  // Recorremos de 7 a 0 para mostrar de la fila 8 a la 1
+            System.out.print((i + 1) + " ");  // Num fila
+            for (int j = 0; j < 8; j++) {
+                System.out.print(taulell[i][j] + " ");
+            }
+            System.out.println((i + 1));  // Num fila
+        }
+        System.out.println("  a b c d e f g h");
     }
 }

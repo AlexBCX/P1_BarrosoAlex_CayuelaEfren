@@ -19,8 +19,23 @@ public class Pieza implements Itipopieza{
     public char getTipus(){
         return tipus;
     }
+    public void setFil(int fil){
+        this.fil = fil;
+    }
     public int getFila(){
         return fil;
+    }
+    public void setCol(int col){
+        switch (col){
+            case 1: this.col='a'; break;
+            case 2: this.col='b'; break;
+            case 3: this.col='c'; break;
+            case 4: this.col='d'; break;
+            case 5: this.col='e'; break;
+            case 6: this.col='f'; break;
+            case 7: this.col='g'; break;
+            case 8: this.col='h'; break;
+        }
     }
     public int getColumna(){
         switch (this.col){
@@ -39,6 +54,8 @@ public class Pieza implements Itipopieza{
         if (fil < 1 || fil > 8 || col < 1 || col > 8) {
             throw new RuntimeException("Posició fora dels límits.");
         }
+        setFil(fil);
+        setCol(col);
     }
     // si la posició no és correcte cal llançar una excepció
     public boolean fiJoc(){
