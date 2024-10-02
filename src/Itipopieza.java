@@ -10,4 +10,6 @@ public interface Itipopieza {
     // si la posició no és correcte cal llançar una excepció
 
     public abstract boolean fiJoc() ;
+
+    void setPosicio(int fil, char col);
 }
