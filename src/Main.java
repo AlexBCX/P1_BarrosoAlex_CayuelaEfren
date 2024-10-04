@@ -28,6 +28,7 @@ public class Main {
         case 1:
             System.out.println("Ingresa el nom del fitxer sense .txt.");
                 //nomFitxer=sc.next();
+                //nomFitxer+=".txt";
                 jugarPartidaNova(torns);
             break;
         case 2:
@@ -38,7 +39,7 @@ public class Main {
             System.out.println("Sortint del joc...");
             break;
         default:
-            System.out.println("Opció no vàlida. Torna-ho a intentar.");
+            System.out.println("Si pasa esto me meto un tiro.");
         }
     }   //FI WHILE (PROGRAMA)
         sc.close();
