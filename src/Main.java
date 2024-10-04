@@ -1,57 +1,94 @@
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import static java.lang.System.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in); //per poder escriure i llegir desde teclat
-    Torns<String> torns=new Torns<>();
-    boolean jugant=true;
+        Torns<String> torns=new Torns<>();
 
     String nomFitxer=""; //nom on guardarem les partides
+    mostrarMenu();
+    }
+    private static void mostrarMenu() {
+        boolean jugant=true;
+        Scanner sc = new Scanner(System.in);
 
-    int opcio;
+        while(jugant) {
+            System.out.println("Benvingut als escacs!");
+            System.out.println("1. Jugar una partida nova");
+            System.out.println("2. Reproduir una partida des d'un fitxer");
+            System.out.println("3. Sortir");
+            System.out.print("Selecciona una opció: ");
+            int opcio = sc.nextInt();
 
-    while(jugant){
-        System.out.println("Benvingut als escacs!");
-        System.out.println("1. Jugar una partida nova");
-        System.out.println("2. Reproduir una partida des d'un fitxer");
-        System.out.println("3. Sortir");
-        System.out.print("Selecciona una opció: ");
-        opcio = sc.nextInt();
-
-        switch(opcio){
-        case 1:
-            System.out.println("Ingresa el nom del fitxer sense .txt.");
-                //nomFitxer=sc.next();
-                //nomFitxer+=".txt";
-                jugarPartidaNova(torns);
-            break;
-        case 2:
-            //case de reproduir desde fitxer
-            break;
-        case 3:
-            jugant = false;
-            System.out.println("Sortint del joc...");
-            break;
-        default:
-            System.out.println("Si pasa esto me meto un tiro.");
+            switch (opcio) {
+                case 1:
+                    jugarPartidaNova();
+                    break;
+                case 2:
+                    //case de reproduir desde fitxer
+                    break;
+                case 3:
+                    jugant = false;
+                    System.out.println("Sortint del joc...");
+                    break;
+                default:
+                    System.out.println("Si pasa esto me meto un tiro.");
+            }
         }
-    }   //FI WHILE (PROGRAMA)
         sc.close();
     }
-    public static void jugarPartidaNova(Torns<String> torns){
+    private static void reproduirPartida(){
+    }
+    /*
+    private static Torns<String> llegirTorns(){
+        return
+    }
+     */
+    private static void tornToPosition(String torn, Jugador<Pieza> p1, Jugador<Pieza> p2) throws FiJocException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Introdueix el moviment (ex: 'a2 d7'):");
+        String movimentP1 = sc.nextLine();
+        String[] moviments = movimentP1.split(" ");
+
+        if (moviments.length != 2) {
+            throw new RuntimeException("Format de moviment incorrecte. Utilitza 'a2 d7'.");
+
+        }
+
+        // Extraer pos inicial y final
+        String posInicial = moviments[0];
+        String posFinal = moviments[1];
+        
+        // Convertir pos inicial (ex----> "a2")
+        int colInicial = posInicial.charAt(0) - 'a' + 1; // Convertir 'a'-'h' a 1-8
+        int filInicial = Character.getNumericValue(posInicial.charAt(1));
+
+        // Convertir pos final (ex. "d7")
+        int colFinal = posFinal.charAt(0) - 'a' + 1;
+        int filFinal = Character.getNumericValue(posFinal.charAt(1));
+
+        // Mover la pieza
+        p1.moverPieza(filInicial, colInicial, filFinal, colFinal);
+        if(p2.eliminarPiezaPosicion(filFinal, colFinal)){
+            System.out.println("Has matat la peça que está en "+ posFinal);
+        }
+
+    }
+
+    private static void jugarPartidaNova(){
+        Torns<String> torns;
+        String tornActual="";
         Scanner sc = new Scanner(System.in);
         boolean partida = true;
+        boolean derechos=true;
+        //TODO: nombre archivo
        //inicialitzem les peces i jugadors
         ArrayList<Pieza>Blanques=new ArrayList<>();
         ArrayList<Pieza>Negres=new ArrayList<>();
-        Blanques = inicialitzarBlanques(Blanques);
-        Negres = inicialitzarNegres(Negres);
+        Blanques = iniciarJuegoBlancas(Blanques);
+        Negres = iniciarJuegoNegras(Negres);
 
         Jugador<Pieza>JugadorBlanc=new Jugador<>(Blanques);
         Jugador<Pieza>JugadorNegre=new Jugador<>(Negres);
@@ -59,68 +96,14 @@ public class Main {
 
         while (partida) {
             try {
+                mostrarTauler(JugadorBlanc, JugadorNegre);//mostrar taulell
 
-                JugadorBlanc.moverPieza( 1, 1, 8, 1);//prueba movimiento borrar luego
-                mostrarTaulell(JugadorBlanc, JugadorNegre);//mostrar taulell
-                System.out.println("Torn de les blanques");
-
-                // Llegir moviment blanques
-                System.out.println("Introdueix el moviment (ex: 'a2 d7'):");
-                String movimentBlanc = sc.nextLine();
-                String[] moviments = movimentBlanc.split(" ");
-
-                if (moviments.length != 2) {
-                    throw new RuntimeException("Format de moviment incorrecte. Usa 'a2 d7'.");
-                }
-
-                // Extraer pos inicial y final
-                String posInicial = moviments[0];
-                String posFinal = moviments[1];
-
-                // Convertir pos inicial (ex----> "a2")
-                int colInicial = posInicial.charAt(0) - 'a' + 1; // Convertir 'a'-'h' a 1-8
-                int filInicial = Character.getNumericValue(posInicial.charAt(1));
-
-                // Convertir pos final (ex. "d7")
-                int colFinal = posFinal.charAt(0) - 'a' + 1;
-                int filFinal = Character.getNumericValue(posFinal.charAt(1));
-
-                // Mover la pieza
-                JugadorBlanc.moverPieza(filInicial, colInicial, filFinal, colFinal);
-                JugadorNegre.eliminarPiezaPosicion(filFinal, colFinal);
-
-                // Mostrar taulelll
-                mostrarTaulell(JugadorBlanc, JugadorNegre);
-                System.out.println("Torn de les negres");
+                System.out.println("Torn de les " + (derechos?"blanques":"negres"));
+                tornToPosition(tornActual,(derechos?JugadorBlanc:JugadorNegre), (derechos?JugadorNegre:JugadorBlanc));
 
 
-                // llegir moviment ( lo mismo que las blancas)
-                System.out.println("Introdueix el moviment (ex: 'a7 a5'):");
-                String movimentNegre = sc.nextLine();
-                String[] movimentsNegres = movimentNegre.split(" ");
-
-                if (movimentsNegres.length != 2) {
-                    throw new RuntimeException("Format de moviment incorrecte. Usa 'a7 a5'.");
-                }
-
-                // Extraer pos inicial y final negras
-                String posInicialNegres = movimentsNegres[0];
-                String posFinalNegres = movimentsNegres[1];
-
-                // Convertir pos inicial y final
-                int colInicialNegre = posInicialNegres.charAt(0) - 'a' + 1;
-                int filInicialNegre = Character.getNumericValue(posInicialNegres.charAt(1));
-
-                int colFinalNegre = posFinalNegres.charAt(0) - 'a' + 1;
-                int filFinalNegre = Character.getNumericValue(posFinalNegres.charAt(1));
-
-                // moure
-                JugadorNegre.moverPieza(filInicialNegre, colInicialNegre, filFinalNegre, colFinalNegre);
                 // todavia no -->System.out.println("peça eliminada!");
-
-
-
-
+                derechos = !derechos;
             } catch (FiJocException e) {
                 System.out.println("Has matat al rei!!! " + e.getMessage());
                 partida = false;
@@ -129,7 +112,7 @@ public class Main {
             }
         }
     }
-    public static ArrayList<Pieza> inicialitzarBlanques(ArrayList<Pieza> piezasBlancas){
+    private static ArrayList<Pieza> iniciarJuegoBlancas(ArrayList<Pieza> piezasBlancas){
     piezasBlancas.clear();
 
 
@@ -156,7 +139,7 @@ public class Main {
         return piezasBlancas;
     }
 
-    public static ArrayList<Pieza> inicialitzarNegres(ArrayList<Pieza> piezasNegras){
+    private static ArrayList<Pieza> iniciarJuegoNegras(ArrayList<Pieza> piezasNegras){
         piezasNegras.clear();
         // Fila 8 (torre, caballo, alfil, reina, rey, alfil, caballo, torre)
         piezasNegras.add(new Pieza(8, 'a', Pieza.TORRE));
@@ -181,7 +164,7 @@ public class Main {
         return piezasNegras;
     }
 
-    public static void mostrarTaulell(Jugador<Pieza> JugadorBlanc, Jugador<Pieza> JugadorNegre) {
+    private static void mostrarTauler(Jugador<Pieza> JugadorBlanc, Jugador<Pieza> JugadorNegre) {
         // Matriu per mostrar Taulell
         char[][] taulell = new char[8][8];
         for (int i = 0; i < 8; i++) {
