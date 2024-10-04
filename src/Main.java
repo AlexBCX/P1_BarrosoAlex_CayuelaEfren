@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -27,6 +28,7 @@ public class Main {
                     jugarPartidaNova();
                     break;
                 case 2:
+                    reproduirPartida();
                     //case de reproduir desde fitxer
                     break;
                 case 3:
@@ -39,13 +41,54 @@ public class Main {
         }
         sc.close();
     }
-    private static void reproduirPartida(){
+    private static void reproduirPartida() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Introdueix el nom del fitxer a reproduir (ej: partida.txt): ");
+        String nomFitxer = sc.nextLine();
+
+        Torns<String> torns = llegirTorns(nomFitxer);
+
+        if (torns == null) {
+            System.out.println("No s'han pogut carregar els torns.");
+            return;
+        }
+
+
+        ArrayList<Pieza> Blanques = iniciarJuegoBlancas(new ArrayList<>());
+        ArrayList<Pieza> Negres = iniciarJuegoNegras(new ArrayList<>());
+        Jugador<Pieza> JugadorBlanc = new Jugador<>(Blanques);
+        Jugador<Pieza> JugadorNegre = new Jugador<>(Negres);
+
+        boolean derechos = true; // Turno de las blancas
+
+        // Reproducir cada movimENT
+        while (torns.getNumTornsRestants() > 0) {
+            mostrarTauler(JugadorBlanc, JugadorNegre);
+
+            String moviment = torns.agafarPrimerTorn();
+            System.out.println("Reproduint moviment: " + moviment);
+
+            // Realizar el movimiento en el tablero
+            try {
+                tornToPosition(moviment, (derechos ? JugadorBlanc : JugadorNegre), (derechos ? JugadorNegre : JugadorBlanc));
+            } catch (FiJocException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Cambiar de turno
+            derechos = !derechos;
+        }
     }
-    /*
-    private static Torns<String> llegirTorns(){
-        return
+
+    private static Torns<String> llegirTorns(String nomFitxer) {
+        try {
+
+            return new Torns<>(nomFitxer); //IntelIJ dice que mejor asi
+        } catch (IOException e) {
+            System.out.println("Error en carregar els torns del fitxer: " + e.getMessage());
+            return null;
+        }
     }
-     */
     private static void tornToPosition(String torn, Jugador<Pieza> p1, Jugador<Pieza> p2) throws FiJocException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Introdueix el moviment (ex: 'a2 d7'):");
@@ -82,7 +125,7 @@ public class Main {
         String tornActual="";
         Scanner sc = new Scanner(System.in);
         boolean partida = true;
-        boolean derechos=true;
+        boolean derechos=true; //true blanques false negres
         //TODO: nombre archivo
        //inicialitzem les peces i jugadors
         ArrayList<Pieza>Blanques=new ArrayList<>();
@@ -92,6 +135,10 @@ public class Main {
 
         Jugador<Pieza>JugadorBlanc=new Jugador<>(Blanques);
         Jugador<Pieza>JugadorNegre=new Jugador<>(Negres);
+
+        System.out.print("Ingresa el nombre del arxiu per guardar els moviments (ex: partida.txt): ");
+        String nomFitxer = sc.nextLine();
+
         System.out.println("Peces posicionades correctament! (Blanques abaix)");
 
         while (partida) {
