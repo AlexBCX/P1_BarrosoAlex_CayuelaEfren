@@ -21,22 +21,26 @@ public class Main {
             System.out.println("2. Reproduir una partida des d'un fitxer");
             System.out.println("3. Sortir");
             System.out.print("Selecciona una opció: ");
-            int opcio = sc.nextInt();
-
-            switch (opcio) {
-                case 1:
-                    jugarPartidaNova();
-                    break;
-                case 2:
-                    reproduirPartida();
-                    //case de reproduir desde fitxer
-                    break;
-                case 3:
-                    jugant = false;
-                    System.out.println("Sortint del joc...");
-                    break;
-                default:
-                    System.out.println("Si pasa esto me meto un tiro.");
+            String input = sc.nextLine();
+            try {
+                int opcio = Integer.parseInt(input); //nos aseguramos de que el usuario siempre escriba un num
+                switch (opcio) {
+                    case 1:
+                        jugarPartidaNova();
+                        break;
+                    case 2:
+                        reproduirPartida();
+                        //case de reproduir desde fitxer
+                        break;
+                    case 3:
+                        jugant = false;
+                        System.out.println("Sortint del joc...");
+                        break;
+                    default:
+                        System.out.println("Si pasa esto me meto un tiro.");
+                }
+            }catch (NumberFormatException e){
+                System.out.println("Escriu un numero entre L'1 i el 3.");
             }
         }
         sc.close();
@@ -89,10 +93,8 @@ public class Main {
             return null;
         }
     }
-    private static void tornToPosition(String torn, Jugador<Pieza> p1, Jugador<Pieza> p2) throws FiJocException {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Introdueix el moviment (ex: 'a2 d7'):");
-        String movimentP1 = sc.nextLine();
+    private static void tornToPosition(String movimentP1, Jugador<Pieza> p1, Jugador<Pieza> p2) throws FiJocException {
+
         String[] moviments = movimentP1.split(" ");
 
         if (moviments.length != 2) {
@@ -121,8 +123,8 @@ public class Main {
     }
 
     private static void jugarPartidaNova(){
-        Torns<String> torns;
-        String tornActual="";
+        Torns<String> torns=new Torns<>();
+
         Scanner sc = new Scanner(System.in);
         boolean partida = true;
         boolean derechos=true; //true blanques false negres
@@ -146,8 +148,12 @@ public class Main {
                 mostrarTauler(JugadorBlanc, JugadorNegre);//mostrar taulell
 
                 System.out.println("Torn de les " + (derechos?"blanques":"negres"));
-                tornToPosition(tornActual,(derechos?JugadorBlanc:JugadorNegre), (derechos?JugadorNegre:JugadorBlanc));
+                System.out.println("Introdueix el moviment (ex: 'a2 d7'):");
+                String movimentP1 = sc.nextLine();
 
+                tornToPosition(movimentP1,(derechos?JugadorBlanc:JugadorNegre), (derechos?JugadorNegre:JugadorBlanc));
+
+                torns.afegirTorn(movimentP1);
 
                 // todavia no -->System.out.println("peça eliminada!");
                 derechos = !derechos;
@@ -157,8 +163,16 @@ public class Main {
             } catch (RuntimeException e) {
                 System.out.println("Error: " + e.getMessage());
             }
+
+        }
+        try {
+            torns.guardarFitxer(nomFitxer);  // Guardamos el archivo al final de la partida
+            System.out.println("Moviments guardats a " + nomFitxer);
+        } catch (IOException e) {
+            System.out.println("Error en guardar el fitxer: " + e.getMessage());
         }
     }
+
     private static ArrayList<Pieza> iniciarJuegoBlancas(ArrayList<Pieza> piezasBlancas){
     piezasBlancas.clear();
 
