@@ -140,6 +140,11 @@ public class Main {
 
         System.out.print("Ingresa el nombre del arxiu per guardar els moviments (ex: partida.txt): ");
         String nomFitxer = sc.nextLine();
+        nomFitxer=nomFitxer.toLowerCase();
+        if(!nomFitxer.endsWith(".txt")){
+            System.out.println("El fitxer ha d'acabar en .txt");
+            return;
+        }
 
         System.out.println("Peces posicionades correctament! (Blanques abaix)");
 
