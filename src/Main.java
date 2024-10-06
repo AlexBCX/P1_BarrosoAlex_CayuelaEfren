@@ -1,14 +1,14 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class Main {
     public static void main(String[] args) {
-        Torns<String> torns=new Torns<>();
 
-    String nomFitxer=""; //nom on guardarem les partides
     mostrarMenu();
     }
     private static void mostrarMenu() {
@@ -66,22 +66,25 @@ public class Main {
         boolean derechos = true; // Turno de las blancas
 
         // Reproducir cada movimENT
-        while (torns.getNumTornsRestants() > 0) {
-            mostrarTauler(JugadorBlanc, JugadorNegre);
 
-            String moviment = torns.agafarPrimerTorn();
-            System.out.println("Reproduint moviment: " + moviment);
+            while (torns.getNumTornsRestants() > 0) {
+                mostrarTauler(JugadorBlanc, JugadorNegre);
 
-            // Realizar el movimiento en el tablero
-            try {
-                tornToPosition(moviment, (derechos ? JugadorBlanc : JugadorNegre), (derechos ? JugadorNegre : JugadorBlanc));
-            } catch (FiJocException e) {
-                throw new RuntimeException(e);
+                String moviment = torns.agafarPrimerTorn();
+                System.out.println("Reproduint moviment: " + moviment);
+
+                // Realizar el movimiento en el tablero
+                try {
+                    tornToPosition(moviment, (derechos ? JugadorBlanc : JugadorNegre), (derechos ? JugadorNegre : JugadorBlanc));
+                } catch (FiJocException e) {
+                    System.out.println("Reproducció finalitzada!");
+                }
+
+                // Cambiar de turno
+                derechos = !derechos;
             }
 
-            // Cambiar de turno
-            derechos = !derechos;
-        }
+
     }
 
     private static Torns<String> llegirTorns(String nomFitxer) {
@@ -147,14 +150,14 @@ public class Main {
         }
 
         System.out.println("Peces posicionades correctament! (Blanques abaix)");
-
+        String movimentP1 = null;
         while (partida) {
             try {
                 mostrarTauler(JugadorBlanc, JugadorNegre);//mostrar taulell
 
                 System.out.println("Torn de les " + (derechos?"blanques":"negres"));
                 System.out.println("Introdueix el moviment (ex: 'a2 d7'):");
-                String movimentP1 = sc.nextLine();
+                movimentP1 = sc.nextLine();
 
                 tornToPosition(movimentP1,(derechos?JugadorBlanc:JugadorNegre), (derechos?JugadorNegre:JugadorBlanc));
 
@@ -163,6 +166,7 @@ public class Main {
                 // todavia no -->System.out.println("peça eliminada!");
                 derechos = !derechos;
             } catch (FiJocException e) {
+                torns.afegirTorn(movimentP1);
                 System.out.println("Has matat al rei!!! " + e.getMessage());
                 partida = false;
             } catch (RuntimeException e) {

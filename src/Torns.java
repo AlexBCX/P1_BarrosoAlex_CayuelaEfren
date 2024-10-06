@@ -13,7 +13,7 @@ public class Torns<E> {
     public Torns (String nomFitxer) throws IOException {
         this.llistatTorns= new ArrayList<>();
          carregarDesDeFitxer(nomFitxer);
-         if(!llistatTorns.isEmpty()){
+         if(llistatTorns.isEmpty()){
              throw new IOException("Fitxer buit o no es poden carregar els torns.");
          }
     }
