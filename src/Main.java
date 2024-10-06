@@ -63,7 +63,7 @@ public class Main {
         Jugador<Pieza> JugadorBlanc = new Jugador<>(Blanques);
         Jugador<Pieza> JugadorNegre = new Jugador<>(Negres);
 
-        boolean derechos = true; // Turno de las blancas
+        boolean color = true; // Turno de las blancas
 
         // Reproducir cada movimENT
 
@@ -75,13 +75,13 @@ public class Main {
 
                 // Realizar el movimiento en el tablero
                 try {
-                    tornToPosition(moviment, (derechos ? JugadorBlanc : JugadorNegre), (derechos ? JugadorNegre : JugadorBlanc));
+                    tornToPosition(moviment, (color ? JugadorBlanc : JugadorNegre), (color ? JugadorNegre : JugadorBlanc));
                 } catch (FiJocException e) {
                     System.out.println("Reproducció finalitzada!");
                 }
 
                 // Cambiar de turno
-                derechos = !derechos;
+                color = !color;
             }
 
 
@@ -130,7 +130,7 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
         boolean partida = true;
-        boolean derechos=true; //true blanques false negres
+        boolean color=true; //true blanques false negres
         //TODO: nombre archivo
        //inicialitzem les peces i jugadors
         ArrayList<Pieza>Blanques=new ArrayList<>();
@@ -155,16 +155,16 @@ public class Main {
             try {
                 mostrarTauler(JugadorBlanc, JugadorNegre);//mostrar taulell
 
-                System.out.println("Torn de les " + (derechos?"blanques":"negres"));
+                System.out.println("Torn de les " + (color?"blanques":"negres"));
                 System.out.println("Introdueix el moviment (ex: 'a2 d7'):");
                 movimentP1 = sc.nextLine();
 
-                tornToPosition(movimentP1,(derechos?JugadorBlanc:JugadorNegre), (derechos?JugadorNegre:JugadorBlanc));
+                tornToPosition(movimentP1,(color?JugadorBlanc:JugadorNegre), (color?JugadorNegre:JugadorBlanc));
 
                 torns.afegirTorn(movimentP1);
 
                 // todavia no -->System.out.println("peça eliminada!");
-                derechos = !derechos;
+                color = !color;
             } catch (FiJocException e) {
                 torns.afegirTorn(movimentP1);
                 System.out.println("Has matat al rei!!! " + e.getMessage());
